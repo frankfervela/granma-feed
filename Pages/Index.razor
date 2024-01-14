@@ -1,0 +1,55 @@
+﻿@page "/"
+@using FeedReader.Clients
+@inject GranmaRssClient _granmaRssClient
+
+<div>
+    <h1 class="text-5xl my-5">Articulos mierderos del Granma</h1>
+    <div class="grid grid-cols-1 xl:grid-cols-2 3xl:grid-cols-3 gap-5">
+        @if (_granmaRssClient?.GranmaArticles != null)
+        {
+            @foreach (var item in _granmaRssClient.GranmaArticles.OrderByDescending(x => x.DatePublished))
+            {
+                <div class="flex flex-col rounded p-5 border justify-between shadow">
+                    <div class="space-y-5 my-5">
+                        <div class="font-bold">
+                            <h5 class="text-5xl">@item.Subject</h5>
+                        </div>
+                        <div class="flex flex-row space-y-5 justify-between">
+                            <div class="space-y-5 my-5 w-3/6">
+                                <p class="italic text-xs">@item.DatePublished.Value.Date.ToUniversalTime().ToString("F")</p>
+
+                                <p class="font-semibold">
+                                    @item.Author,
+                                </p>
+
+                                <p class="text-sm">@item.Summary</p>
+                                <div>
+                                    @foreach (var tags in item.TagsUsed)
+                                    {
+                                        <p class="category-tag">@tags</p>
+                                    }
+                                </div>
+
+                            </div>
+                            
+
+                        </div>
+                        <div class="flex space-x-10">
+                            <div class="flex flex-col w-3/6">
+                                <p class="font-semibold">@string.Join("\n", item.ArticleContent)</p>
+                            </div>
+                            <img src="@item.ImageUrl" alt="@item.Subject" class="object-center w-3/6 h-auto rounded-md">
+                        </div>
+                        
+                    </div>
+                    <a href="@item.ArticleUrl" class="btn btn-blue">Ver artículo original</a>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code{
+
+
+}
